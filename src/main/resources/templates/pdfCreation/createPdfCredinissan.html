@@ -1,0 +1,298 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+    <script>
+
+        function showTextFieldProp() {
+            document.getElementById('hiddeablePropStat').style.display = 'block';
+            document.getElementById('rentPrice').required = true;
+        }
+
+        function hideTextFieldProp() {
+            document.getElementById('hiddeablePropStat').style.display = 'none';
+            document.getElementById('rentPrice').value = '';
+            document.getElementById('rentPrice').removeAttribute('required');
+        }
+
+        function setInputBehavior(inputId, type) {
+            const inputElement = document.getElementById(inputId);
+
+            inputElement.value = '';
+
+            if (type === 'ine') {
+                inputElement.oninput = function () {
+                    this.value = this.value.replace(/[^0-9]/g, '').substring(0, 16);
+                };
+            } else if (type === 'passport') {
+                inputElement.oninput = function () {
+                                    this.value = this.value.replace(/[^A-Za-z0-9]/g, '').substring(0, 9);
+                    if (!/^[A-Za-z]\d{8}$/.test(this.value)) {
+                        this.setCustomValidity('El pasaporte debe tener 1 letra seguida de 8 números distintos.');
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                };
+            }
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        window.onload = function() {
+            document.getElementById('monthsLiving').addEventListener('change', function() {
+                var yearsInput = document.getElementById('yearsLiving');
+                var monthsInput = document.getElementById('monthsLiving');
+                var months = Number(monthsInput.value);
+                var years = Number(yearsInput.value);
+
+                if (months >= 12) {
+                    monthsInput.value = 0;
+                    yearsInput.value = years + 1;
+                }
+            });
+        };
+
+    </script>
+
+    <title>Lista de Clientes</title>
+</head>
+
+<body class="bg-secondary">
+<div class="container bg-light px-5 py-3">
+    <h3>Crear solocitud para Credinissan</h3>
+    <button onclick="goBack()" style="height:35px; width:100px;" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>&nbsp;Volver
+    </button>
+    <hr>
+
+    <form action="#" th:action="@{/PDFCreation/createPDFCredinissan}" th:object="${client}" method="post">
+        <h3 class="mb-4">Datos generales de la solicitud</h3>
+
+        <input type="hidden" th:field="*{id}">
+
+        <h5>Tipo de solicitud*</h5>
+        <label for="simpleCredit">Cr&eacute;dito Simple</label>
+        <input id="simpleCredit" type="radio" th:name="requestType" th:value="simpleCredit" required checked/>
+        <label class="ms-3" for="leasing">Arrendamiento</label>
+        <input id="leasing" type="radio" th:name="requestType" th:value="leasing" required />
+        <label class="ms-3" for="crediTaxi">Credi Taxi</label>
+        <input id="crediTaxi" type="radio" th:name="requestType" th:value="crediTaxi" required />
+        <label class="ms-3" for="subete">S&uacute;bete</label>
+        <input id="subete" type="radio" th:name="requestType" th:value="subete" required />
+        <br>
+        <label class="mt-3" for="email">E-mail</label>
+        <input id="email" class="form-control mb-4 w-25" placeholder="E-mail" th:field="*{email}" type="text" disabled>
+        <p></p>
+
+        <h5>Tipo de solicitante*</h5>
+        <label for="physicalPers">F&iacute;sica</label>
+        <input id="physicalPers" type="radio" th:name="bussinesAct" th:value="checkboxPersonaFisica1" required checked/>
+        <label class="ms-3" for="businessActPers">F&iacute;sica con Actividad Empresarial</label>
+        <input id="businessActPers" type="radio" th:name="bussinesAct" th:value="checkboxPersonaFisicaAE" required />
+        <p></p>
+
+        <h5>¿Cliente recompra?*</h5>
+        <label for="yesIsNew">S&iacute;</label>
+        <input id="yesIsNew" type="radio" th:name="isRebuy" th:value="checkboxReBuyYes" />
+        <label for="noIsChange">No</label>
+        <input id="noIsChange" type="radio" th:name="isRebuy" th:value="checkboxReBuyNo" checked/>
+        <p></p>
+
+        <h5>Empleado de alianza NR</h5>
+        <label for="yesIsNr">S&iacute;</label>
+        <input id="yesIsNr" type="radio" th:name="nrEmployee" th:value="checkboxAlianzaEmployeeYes" />
+        <label for="noIsNr">No</label>
+        <input id="noIsNr" type="radio" th:name="nrEmployee" th:value="checkboxAlianzaEmployeeNo" checked/>
+
+        <hr>
+        <h3>Datos del acreditado</h3>
+        <br>
+
+        <div class="d-flex">
+            <div class="w-25">
+                Apellido paterno<input class="form-control mb-4 w-100" placeholder="Apellido paterno" th:field="*{lastName}" type="text" disabled>
+                Apellido materno<input class="form-control mb-4 w-100" placeholder="Apellido materno" th:field="*{secondLastName}" type="text" disabled>
+                Primer Nombre<input class="form-control mb-4 w-100" placeholder="Primer Nombre" th:field="*{firstName}" type="text" disabled>
+                Segundo Nombre<input class="form-control mb-4 w-100" placeholder="Segundo Nombre" th:field="*{middleName}" type="text" disabled>
+                Fecha de nacimiento<input class="form-control mb-4 w-100" th:field="*{dateOfBirth}" type="date" disabled>
+            </div>
+
+            <div class="ms-5 w-25">
+                RFC<input class="form-control mb-4 w-100" placeholder="RFC" th:field="*{rfc}" type="text" disabled>
+                CURP<input class="form-control mb-4 w-100" placeholder="CURP" th:field="*{curp}" type="text" disabled>
+                Pa&iacute;s de nacimiento<input class="form-control mb-4 w-100" placeholder="Pa&iacute;s de nacimiento" th:field="*{countryOfBirth}" type="text" disabled>
+                Estado de nacimiento<input class="form-control mb-4 w-100" placeholder="Estado" th:field="*{stateOfBirth}" type="text" disabled>
+                G&eacute;nero<input class="form-control mb-4 w-100" placeholder="G&eacute;nero" th:field="*{gender}" type="text" disabled>
+            </div>
+
+            <div class="ms-5 w-25">
+                Nacionalidad<input class="form-control mb-4 w-100" placeholder="Nacionalidad" th:field="*{nationality}" type="text" disabled>
+                Tel&eacute;fono<input class="form-control mb-4 w-100" placeholder="Tel&eacute;fono" th:field="*{phoneNumber}" type="text" disabled>
+                Estado civil<input class="form-control mb-4 w-100" placeholder="Estado civil" th:field="*{maritalStatus}" type="text" disabled>
+                <h5>Tipo de identificaci&oacute;n*</h5>
+                <label for="idTypeIne">Credencial de elector</label>
+                <input id="idTypeIne" type="radio" th:name="idType" th:value="INE" onclick="setInputBehavior('idNumber', 'ine')" checked required/>
+                <label class="ms-3" for="idTypePassport">Pasaporte</label>
+                <input id="idTypePassport" type="radio" th:name="idType" th:value="Passport" onclick="setInputBehavior('idNumber', 'passport')" required/>
+                <input id="idTypeNone" type="radio" th:name="idType" th:value="''" style="display:none;" required/>
+                <input id="idNumber" class="form-control mt-2 mb-4 w-100" type="text" placeholder="Numero de identificaci&oacute;n" th:name="idNumber" oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0, 16);" required/>
+                <!--                <h5>Fecha de vencimiento Identificaci&oacute;n*</h5><input id="idExpDate" class="form-control mt-2 mb-4 w-100" th:name="idExpDate" th:value="${#dates.format(idExpDate, 'dd/MM/yyyy')}" type="date" required>-->
+            </div>
+        </div>
+
+        <hr>
+        <h3>Datos del domicilio</h3>
+        <br>
+        <div class="d-flex">
+            <div class="w-50">
+                <h5>¿El inmueble donde actualmente reside es?*</h5>
+                <label for="isFamilyProperty">Casa familiar</label>
+                <input id="isFamilyProperty" type="radio" th:name="propertyStatus" th:value="family_property" onclick="hideTextFieldProp()"/>
+                <label class="ms-3" for="isOwned">Propio</label>
+                <input id="isOwned" type="radio" th:name="propertyStatus" th:value="owned" onclick="hideTextFieldProp()" checked/>
+                <label class="ms-3" for="stillPaying">Pagandola</label>
+                <input id="stillPaying" type="radio" th:name="propertyStatus" th:value="still_paying" onclick="hideTextFieldProp()" />
+                <label class="ms-3" for="isRented">Rentado</label>
+                <input id="isRented" type="radio" th:name="propertyStatus" th:value="rented" onclick="showTextFieldProp()"/>
+                <div id="hiddeablePropStat" style="display: none;">
+                    <input id="rentPrice" class="form-control mt-2 mb-4 w-50" type="text" placeholder="Precio de renta" th:name="rentPrice"/>
+                </div>
+                <p></p>
+                Calle de Residencia<input class="form-control mb-4 w-50" placeholder="Calle de Residencia" th:field="*{streetName}" type="text" disabled>
+                N&uacute;mero exterior<input class="form-control mb-4 w-50" placeholder="N&uacute;mero exterior" th:field="*{extNumber}" type="text" disabled>
+                N&uacute;mero interior<input class="form-control mb-4 w-50" placeholder="N&uacute;mero interior" th:field="*{intNumber}" type="text" disabled>
+                Colonia<input class="form-control mb-4 w-50" placeholder="Colonia" th:field="*{colony}" type="text" disabled>
+                <h5>Pa&iacute;s de domicilio*</h5><input class="form-control mt-2 mb-4 w-50" type="text" placeholder="Pa&iacute;s de domicilio" th:name="countryOfResidence" value="MEXICO" required/>
+            </div>
+
+            <div class="ms-5 w-50">
+                Municipio<input class="form-control mb-4 w-50" placeholder="Municipio" th:field="*{municipality}" type="text" disabled>
+                Ciudad<input class="form-control mb-4 w-50" placeholder="Ciudad" th:field="*{city}" type="text" disabled>
+                Estado<input class="form-control mb-4 w-50" placeholder="Estado" th:field="*{state}" type="text" disabled>
+                C&oacute;digo Postal<input class="form-control mb-4 w-50" placeholder="C&oacute;digo Postal" th:field="*{zipCode}" type="text" disabled>
+                <p></p>
+                <h5>¿Cu&aacute;ntos a&ntilde;os lleva viviendo en esta direcci&oacute;n?*</h5>
+                <div style="display: flex; align-items:center;">
+                    <label for="yearsLiving">Años</label>
+                    <input style="width:70px" class="form-control ms-1" id="yearsLiving" type="number" placeholder="Años" th:name="yearsLiving" required value="1" min="0"/>
+                    <label class="ms-3" for="monthsLiving">Meses</label>
+                    <input style="width:70px" class="form-control ms-1" id="monthsLiving" type="number" placeholder="Meses" th:name="monthsLiving" required value="0" min="0" max="12"/>
+                </div>
+                <p></p>
+
+            </div>
+        </div>
+
+        <hr>
+        <h3>Ocupaci&oacute;n del acreditado</h3>
+        <br>
+
+        <div class="d-flex">
+            <div class="w-50">
+                Ocupaci&oacute;n<input class="form-control mb-4 w-50" placeholder="Ocupaci&oacute;n" th:field="*{jobStatus}" type="text" disabled>
+                <h5 >Tipo de Contrato*</h5>
+                <label for="isFixed">Fijo</label>
+                <input id="isFixed" type="radio" th:name="contractType" th:value="checkboxPermanentJob" checked/>
+                <label class="ms-3" for="isTemp">Temporal</label>
+                <input id="isTemp" type="radio" th:name="contractType" th:value="checkboxTemporalJob" />
+                <p></p>
+                Nombre de la empresa<input class="form-control mb-4 w-50" placeholder="Nombre de la empresa" th:field="*{companyName}" type="text" disabled>
+                Fecha de inicio de la relaci&oacute;n laboral<input id="startWorkingDate" class="form-control mb-4 w-50" th:field="*{dateStartedWorking}" type="date" disabled>
+                Nombre del puesto<input class="form-control mb-4 w-50" placeholder="Nombre del puesto" th:field="*{positionName}" type="text" disabled>
+                Pa&iacute;s<input class="form-control mb-4 w-50" placeholder="Pa&iacute;s" th:field="*{companyCountry}" type="text" disabled>
+                <h5 >Tipo de empresa*</h5>
+                <label for="isPublic">P&uacute;blica</label>
+                <input id="isPublic" type="radio" th:name="companyType" th:value="checkboxPrivateCompany"/>
+                <label class="ms-3" for="isPrivate">Privada</label>
+                <input id="isPrivate" type="radio" th:name="companyType" th:value="checkboxPublicCompany" checked/>
+                <p></p>
+
+                Actividad de la empresa<input class="form-control mb-4 w-50" placeholder="Actividad de la empresa" th:field="*{companyActivity}" type="text" disabled>
+                <div class="w-100" style="display:flex;">
+                    <div class="w-50">
+                        Numero de tel&eacute;fono<input class="form-control mb-4" placeholder="Numero de tel&eacute;fono" th:field="*{companyPhoneNumber}" type="text" disabled>
+                    </div>
+                    <div class="w-25">
+                        <label class="ms-3" for="phoneNumberExt">Extensi&oacute;n</label>
+                        <input id="phoneNumberExt" style="width:65px;" class="form-control mb-4 ms-3" placeholder="Ext." th:field="*{companyPhoneNumberExt}" type="text" disabled>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-50">
+                <div style="display:flex;">
+                    <div>
+                        Calle<input class="form-control mb-4" placeholder="Calle" th:field="*{companyStreetName}" type="text" disabled>
+                    </div>
+                    <div>
+                        <label class="ms-3" for="compAddressNumExt"># Ext.</label>
+                        <input id="compAddressNumExt" style="width:65px;" class="form-control mb-4 ms-3" placeholder="# ext." th:field="*{companyExtNumber}" type="text" disabled>
+                    </div>
+                    <div>
+                        <label for="compAddressNumInt" class="ms-3"># Int.</label>
+                        <input id="compAddressNumInt" style="width:65px;" class="form-control mb-4 ms-3" placeholder="# int." th:field="*{companyIntNumber}" type="text" disabled>
+
+                    </div>
+                </div>
+
+                Colonia<input class="form-control mb-4 w-50" placeholder="Colonia" th:field="*{companyColony}" type="text" disabled>
+                Municipio<input class="form-control mb-4 w-50" placeholder="Municipio" th:field="*{companyMunicipality}" type="text" disabled>
+                Estado<input class="form-control mb-4 w-50" placeholder="Estado" th:field="*{companyState}" type="text" disabled>
+                C&oacute;digo postal<input class="form-control mb-4 w-50" placeholder="C&oacute;digo postal" th:field="*{companyZipCode}" type="text" disabled>
+                <h5>Nombre del jefe inmediato*</h5><input class="form-control mb-4 w-75" type="text" placeholder="Nombre del jefe inmediato" th:name="bossName"  required>
+                <h5>Puesto del jefe inmediato*</h5><input class="form-control mb-4 w-50" type="text" placeholder="Puesto del jefe inmediato" th:name="bossPosition"  required>
+                <h5>Tel&eacute;fono del jefe*</h5><input class="form-control mb-4 w-50" type="text" placeholder="Tel&eacute;fono del jefe" th:name="bossPhoneNumber"  required>
+
+            </div>
+        </div>
+
+        <hr>
+        <h3>Referencias</h3>
+        <br>
+
+        <div class="w-100" style="display:flex;">
+            <div class="w-25">
+                Primer nombre (Conocido)<input class="form-control mb-4 w-75" placeholder="Primer nombre (Conocido)" th:field="*{persRefFirstName}" type="text" disabled>
+                Segundo nombre (Conocido)<input class="form-control mb-4 w-75" placeholder="Segundo nombre (Conocido)" th:field="*{persRefMiddleName}" type="text" disabled>
+                Apellido paterno (Conocido)<input class="form-control mb-4 w-75" placeholder="Apellido paterno (Conocido)" th:field="*{persRefLastName}" type="text" disabled>
+                Apellido materno (Conocido)<input class="form-control mb-4 w-75" placeholder="Apellido materno (Conocido)" th:field="*{persRefSecLastName}" type="text"disabled>
+                Tel&eacute;fono (Conocido)<input class="form-control mb-4 w-75" placeholder="Tel&eacute;fono (Conocido)" th:field="*{persRefPhoneNumber}" type="text" disabled>
+            </div>
+            <div class="ms-5 w-25">
+                Primer nombre (Familia)<input class="form-control mb-4 w-75" placeholder="Primer nombre (Familia)" th:field="*{famRefFirstName}" type="text" disabled>
+                Segundo nombre (Familia)<input class="form-control mb-4 w-75" placeholder="Segundo nombre (Familia)" th:field="*{famRefMiddleName}" type="text" disabled>
+                Apellido paterno (Familia)<input class="form-control mb-4 w-75" placeholder="Apellido paterno (Familia)" th:field="*{famRefLastName}" type="text" disabled>
+                Apellido materno (Familia)<input class="form-control mb-4 w-75" placeholder="Apellido materno (Familia)" th:field="*{famRefSecLastName}" type="text"disabled>
+                Tel&eacute;fono (Familia)<input class="form-control mb-4 w-75" placeholder="Tel&eacute;fono (Familia)" th:field="*{famRefPhoneNumber}" type="text" disabled>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="d-flex">
+            <div class="w-100 d-flex align-self-center">
+                <a th:href="@{/clients/listPaged}">Volver a la Lista de Clientes</a>
+            </div>
+            <div id="buttons" class="d-flex flex-row-reverse w-100 align-self-center">
+                <button type="submit" class="btn btn-danger col-3">Crear</button>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+</body>
+
+</html>

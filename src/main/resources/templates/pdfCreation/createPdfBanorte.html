@@ -1,0 +1,243 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+    <script>
+        function showTextField() {
+            var inputElement = document.getElementById('accountNumber');
+            var hiddeableAccNum = document.getElementById('hiddeableAccNum');
+
+            hiddeableAccNum.style.display = 'block';
+            inputElement.required = true;
+        }
+
+        function hideTextField() {
+            var inputElement = document.getElementById('accountNumber');
+            var hiddeableAccNum = document.getElementById('hiddeableAccNum')
+
+            hiddeableAccNum.style.display = 'none';
+            inputElement.value = '';
+            inputElement.removeAttribute('required');
+        }
+
+        function showHiddeableIsSolidary() {
+            var hiddeableAccNum = document.getElementById('hiddeableIsSolidary');
+            var solidaryName = document.getElementById('solidaryName');
+            var solidaryLastName = document.getElementById('solidaryLastName');
+            var solidarySecondLastName = document.getElementById('solidarySecondLastName');
+
+            hiddeableAccNum.style.display = 'block';
+            solidaryName.required = true;
+            solidaryLastName.required = true;
+            solidarySecondLastName.required = true;
+        }
+
+        function hideHiddeableIsSolidary() {
+            document.getElementById('hiddeableIsSolidary').style.display = 'none';
+            document.getElementById('solidaryName').value = '';
+            document.getElementById('solidaryLastName').value = '';
+            document.getElementById('solidarySecondLastName').value = '';
+
+            document.getElementById('solidaryName').removeAttribute('required');
+            document.getElementById('solidaryLastName').removeAttribute('required');
+            document.getElementById('solidarySecondLastName').removeAttribute('required');
+        }
+
+        function showTextFieldProp() {
+            document.getElementById('hiddeablePropStat').style.display = 'block';
+            document.getElementById('rentPrice').required = true;
+        }
+
+        function hideTextFieldProp() {
+            document.getElementById('hiddeablePropStat').style.display = 'none';
+            document.getElementById('rentPrice').removeAttribute('required');
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+    <title>Lista de Clientes</title>
+</head>
+
+<body class="bg-secondary">
+<div class="container bg-light px-5 py-3">
+    <h3>Crear solicitud para Banorte</h3>
+    <button onclick="goBack()" style="height:35px; width:100px;" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>&nbsp;Volver
+    </button>
+    <hr>
+
+
+    <form id="formBanorte" action="#" th:action="@{/PDFCreation/createPDFBanorte}" th:object="${client}" method="post">
+        <h3 class="mb-4">Datos generales de la solicitud</h3>
+
+        <input type="hidden" th:field="*{id}">
+
+        <div class="d-flex">
+            <div class="w-25">
+                <h5>¿Es cliente Banorte?*</h5>
+                <label for="yesIsClient">S&iacute;</label>
+                <input id="yesIsClient" type="radio" th:name="isClient" th:value="yes" onclick="showTextField()" required/>
+                <label for="noIsClient">No</label>
+                <input id="noIsClient" type="radio" th:name="isClient" th:value="no" onclick="hideTextField()" required checked/>
+                <div id="hiddeableAccNum" style="display: none;">
+                    <input id="accountNumber" class="form-control mt-2 mb-4 w-100" type="text" placeholder="N&uacute;mero de cuenta" th:name="accountNumber"/>
+                </div>
+                <p></p>
+                <h5>¿Actividad empresarial?*</h5>
+                <label for="yesBussinesAct">S&iacute;</label>
+                <input id="yesBussinesAct" type="radio" th:name="bussinesAct" th:value="yes" required/>
+                <label for="noBussinesAct">No</label>
+                <input id="noBussinesAct" type="radio" th:name="bussinesAct" th:value="no" required checked/>
+            </div>
+
+            <div class="ms-5 w-25">
+                <h5>Acreditado*</h5>
+                <label for="hasCreditYes">S&iacute;</label>
+                <input id="hasCreditYes" type="radio" th:name="hasCredit" th:value="yes" required/>
+                <label for="hasCreditNo">No</label>
+                <input id="hasCreditNo" type="radio" th:name="hasCredit" th:value="no" required checked/>
+                <p></p>
+
+                <h5>Obligado Solidario*</h5>
+                <label for="isSolidaryYes">S&iacute;</label>
+                <input id="isSolidaryYes" type="radio" th:name="isSolidary" th:value="yes" onclick="showHiddeableIsSolidary()"/>
+                <label for="isSolidaryNo">No</label>
+                <input id="isSolidaryNo" type="radio" th:name="isSolidary" th:value="no" onclick="hideHiddeableIsSolidary()" checked/>
+                <div id="hiddeableIsSolidary" style="display: none;">
+                    <input id="solidaryName" class="form-control mt-2 mb-4 w-100" type="text" placeholder="Nombre(s)" th:name="solidaryNames"/>
+                    <input id="solidaryLastName" class="form-control mt-2 mb-4 w-100" type="text" placeholder="Apellido paterno" th:name="solidaryLastName"/>
+                    <input id="solidarySecondLastName" class="form-control mt-2 mb-4 w-100" type="text" placeholder="Apellido materno" th:name="solidarySecondLastName"/>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        <h3>Informaci&oacute;n del solicitante</h3>
+        <br>
+
+        <div class="d-flex">
+            <div class="w-25">
+                Primer Nombre<input class="form-control mb-4 w-100" placeholder="Primer Nombre" th:field="*{firstName}" type="text" disabled>
+                Segundo Nombre<input class="form-control mb-4 w-100" placeholder="Segundo Nombre" th:field="*{middleName}" type="text" disabled>
+                Apellido paterno<input class="form-control mb-4 w-100" placeholder="Apellido paterno" th:field="*{lastName}" type="text" disabled>
+                Apellido materno<input class="form-control mb-4 w-100" placeholder="Apellido materno" th:field="*{secondLastName}" type="text" disabled>
+                G&eacute;nero<input class="form-control mb-4 w-100" placeholder="G&eacute;nero" th:field="*{gender}" type="text" disabled>
+            </div>
+
+            <div class="ms-5 w-25">
+                Estado civil<input class="form-control mb-4 w-100" placeholder="Estado civil" th:field="*{maritalStatus}" type="text" disabled>
+                Nacionalidad<input class="form-control mb-4 w-100" placeholder="Nacionalidad" th:field="*{nationality}" type="text" disabled>
+                RFC<input class="form-control mb-4 w-100" placeholder="RFC" th:field="*{rfc}" type="text" disabled>
+                Ciudad de Nacimiento<input class="form-control mb-4 w-100" placeholder="Ciudad de Nacimiento" th:field="*{cityOfBirth}" type="text" disabled>
+                CURP<input class="form-control mb-4 w-100" placeholder="CURP" th:field="*{curp}" type="text" disabled>
+            </div>
+        </div>
+
+        <hr>
+        <h3>Informaci&oacute;n de direcci&oacute;n de residencia</h3>
+        <br>
+
+        <h5>¿El inmueble donde actualmente reside es?*</h5>
+        <input id="isFamilyProperty" type="radio" th:name="propertyStatus" th:value="family_property" onclick="hideTextFieldProp()" required/>
+        <label for="isFamilyProperty">Casa familiar</label>
+        <input class="ms-3" id="isOwned" type="radio" th:name="propertyStatus" th:value="owned" onclick="hideTextFieldProp()" required checked/>
+        <label for="isOwned">Propio</label>
+        <input class="ms-3" id="stillPaying" type="radio" th:name="propertyStatus" th:value="still_paying" onclick="hideTextFieldProp()" required/>
+        <label for="stillPaying">Pagandola</label>
+        <input class="ms-3" id="isRented" type="radio" th:name="propertyStatus" th:value="rented" onclick="showTextFieldProp()" required/>
+        <label for="isRented">Rentado</label>
+        <p></p>
+        <div id="hiddeablePropStat" style="display: none;">
+            <h6>Precio de renta*</h6><input id="rentPrice" class="form-control mt-2 mb-4 w-25" type="text" placeholder="Precio de renta" th:name="rentPrice"/>
+        </div>
+
+        <hr class="w-50">
+
+        <div class="d-flex">
+            <div class="w-25">
+                Calle de Residencia<input class="form-control mb-4 w-100" placeholder="Calle de Residencia" th:field="*{streetName}" type="text" disabled>
+                N&uacute;mero exterior<input class="form-control mb-4 w-100" placeholder="N&uacute;mero exterior" th:field="*{extNumber}" type="text" disabled>
+                N&uacute;mero interior<input class="form-control mb-4 w-100" placeholder="N&uacute;mero interior" th:field="*{intNumber}" type="text" disabled>
+                Colonia<input class="form-control mb-4 w-100" placeholder="Colonia" th:field="*{colony}" type="text" disabled>
+                Municipio<input class="form-control mb-4 w-100" placeholder="Municipio" th:field="*{municipality}" type="text" disabled>
+            </div>
+
+            <div class="ms-3 w-25">
+                Estado<input class="form-control mb-4 w-100" placeholder="Estado" th:field="*{state}" type="text" disabled>
+                C&oacute;digo Postal<input class="form-control mb-4 w-100" placeholder="C&oacute;digo Postal" th:field="*{zipCode}" type="text" disabled>
+                NSS<input class="form-control mb-4 w-100" placeholder="NSS" th:field="*{socialSecurityNumber}" type="text" disabled>
+                Tel&eacute;fono<input class="form-control mb-4 w-100" placeholder="Tel&eacute;fono" th:field="*{phoneNumber}" type="text" disabled>
+                E-mail<input class="form-control mb-4 w-100" placeholder="E-mail" th:field="*{email}" type="text" disabled>
+            </div>
+        </div>
+
+        <hr>
+        <h3>Informaci&oacute;n de su empleo</h3>
+        <br>
+
+        <div class="d-flex">
+            <div class="w-50">
+                Nombre de la empresa<input class="form-control mb-4 w-50" placeholder="Nombre de la empresa" th:field="*{companyName}" type="text" disabled/>
+                <div style="display:flex;">
+                    <div>
+                        N&uacute;mero de tel&eacute;fono<input class="form-control mb-4 w-100" placeholder="N&uacute;mero de tel&eacute;fono" th:field="*{companyPhoneNumber}" type="text" disabled/>
+                    </div>
+                    <div>
+                        <label class="ms-3">Extensi&oacute;n</label>
+                        <input style="width:65px;" class="form-control mb-4 ms-3" placeholder="Ext." th:field="*{companyPhoneNumberExt}" type="text" disabled/>
+                    </div>
+                </div>
+                <div style="display:flex;">
+                    <div class="w-75">
+                        Calle<input class="form-control mb-4 w-100" placeholder="Calle" th:field="*{companyStreetName}" type="text" disabled/>
+                    </div>
+                    <div>
+                        <label class="ms-3" for="workAddressNumberExt">N&uacute;m ext.</label>
+                        <input id="workAddressNumberExt" style="width:65px;" class="form-control mb-4 ms-3" placeholder="# ext." th:field="*{companyExtNumber}" type="text" disabled/>
+                    </div>
+                    <div>
+                        <label class="ms-3" for="workAddressNumberInt">N&uacute;m int.</label>
+                        <input id="workAddressNumberInt" style="width:65px;" class="form-control mb-4 ms-3" placeholder="# int." th:field="*{companyIntNumber}" type="text" disabled/>
+                    </div>
+                </div>
+                Colonia<input class="form-control mb-4 w-50" placeholder="Colonia" th:field="*{companyColony}" type="text" disabled/>
+                Municipio<input class="form-control mb-4 w-50" placeholder="Municipio" th:field="*{companyMunicipality}" type="text" disabled/>
+                Estado<input class="form-control mb-4 w-50" placeholder="Estado" th:field="*{companyState}" type="text" disabled/>
+            </div>
+            <div class="ms-5 w-50">
+                C&oacute;digo postal<input class="form-control mb-4 w-50" placeholder="C&oacute;digo postal" th:field="*{companyZipCode}" type="text" disabled/>
+                Fecha de inicio de la relaci&oacute;n laboral<input id="startWorkingDate" class="form-control mb-4 w-50" th:field="*{dateStartedWorking}" type="date" disabled/>
+                Estatus laboral<input class="form-control mb-4 w-50" placeholder="Estatus laboral" th:field="*{jobStatus}" type="text" disabled/>
+                Nombre del puesto<input class="form-control mb-4 w-50" placeholder="Nombre del puesto" th:field="*{positionName}" type="text" disabled/>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="d-flex">
+            <div class="w-100 d-flex align-self-center">
+                <a th:href="@{/clients/listPaged}">Volver a la Lista de Clientes</a>
+            </div>
+            <div id="buttons" class="d-flex flex-row-reverse w-100 align-self-center">
+                <button form="formBanorte" type="submit" class="btn btn-danger col-3">Crear PDF</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+</body>
+
+</html>

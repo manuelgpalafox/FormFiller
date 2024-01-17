@@ -1,0 +1,208 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+    <title>Lista de Clientes</title>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</head>
+
+<body class="bg-secondary">
+<div class="container bg-light px-5 py-3">
+
+    <h3> Guardar cliente nuevo</h3>
+    <button onclick="goBack()" style="height:35px; width:100px;" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>&nbsp;Volver
+    </button>
+    <hr>
+    <span class="h6">Los campos marcados con un * son obligatorios</span>
+
+    <p class="h4 mb-4 mt-4">Datos de identificaci&oacute;n</p>
+
+    <form action="#" th:action="@{/clients/save}" th:object="${client}" method="post">
+        <input type="hidden" th:field="*{id}">
+
+        <div style="display: flex;">
+            <div class="w-25">
+                <h6>Primer Nombre*</h6><input required class="form-control mb-4 w-75" placeholder="Primer Nombre" th:field="*{firstName}" type="text">
+                Segundo Nombre<input class="form-control mb-4 w-75" placeholder="Segundo Nombre" th:field="*{middleName}" type="text">
+                <h6>Apellido paterno*</h6><input required class="form-control mb-4 w-75" placeholder="Apellido paterno" th:field="*{lastName}" type="text">
+                Apellido materno<input class="form-control mb-4 w-75" placeholder="Apellido materno" th:field="*{secondLastName}" type="text">
+                <h6>G&eacute;nero*</h6><select required id="gender" class="form-select mb-4 w-75" th:field="*{gender}">
+                    <option value="m">Hombre</option>
+                    <option value="f">Mujer</option>
+                </select>
+                <h6>Estado civil*</h6><select required id="martialStat" class="form-select mb-4 w-75" th:field="*{maritalStatus}">
+                    <option value="single" selected>Soltero</option>
+                    <option value="widower">Viudo(a)</option>
+                    <option value="marriedCommunity">Casado mancomunado</option>
+                    <option value="marriedSeparate">Casado bienes separados</option>
+                    <option value="divorced">Divorciado</option>
+                    <option value="cohabitation">Uni&oacute;n libre</option>
+                    <option value="split">Separado(a)</option>
+                    <option value="other">Otro</option>
+                </select>
+
+            </div>
+
+            <div class="ms-3 w-25">
+                <h6>Nacionalidad*</h6><select required id="nationality" class="form-select mb-4 w-75" th:field="*{nationality}">
+                <option value="Mexicana" selected>Mexicano</option>
+                <option value="Foreign">Extranjero</option>
+            </select>
+                <h6>RFC*</h6><input required class="form-control mb-4 w-75" placeholder="RFC" th:field="*{rfc}" type="text" maxlength="13">
+                <h6>Ciudad de Nacimiento*</h6><input required class="form-control mb-4 w-75" placeholder="Ciudad de Nacimiento" th:field="*{cityOfBirth}" type="text">
+                <h6>Pa&iacute;s de Nacimiento*</h6><input required class="form-control mb-4 w-75" placeholder="Pa&iacute;s de Nacimiento" th:field="*{countryOfBirth}" type="text">
+                <h6>Estado de Nacimiento*</h6><input required class="form-control mb-4 w-75" placeholder="Estado de Nacimiento" th:field="*{stateOfBirth}" type="text">
+            </div>
+
+            <div class="ms-3 w-25">
+                <h6>CURP*</h6><input required class="form-control mb-4 w-100" placeholder="CURP" th:field="*{curp}" type="text" maxlength="18">
+                <h6>N&uacute;mero de Seguridad Social*</h6><input required class="form-control mb-4 w-75" placeholder="NSS" th:field="*{socialSecurityNumber}" type="text">
+                <h6>Fecha de nacimiento*</h6><input required id="dateOfBirth" class="form-control mb-4 w-75" placeholder="Fecha de Nacimiento" th:field="*{dateOfBirth}" type="date">
+                <h6>Tel&eacute;fono*</h6><input required class="form-control mb-4 w-75" placeholder="Tel&eacute;fono" th:field="*{phoneNumber}" type="text">
+                E-mail<input class="form-control mb-4 w-100" placeholder="E-mail" th:field="*{email}" type="email">
+            </div>
+        </div>
+
+        <hr>
+        <h3>Informaci&oacute;n de direcci&oacute;n de residencia</h3>
+        <br>
+
+        <div style="display:flex;">
+            <div class="w-50">
+                <div style="display:flex;">
+                    <div class="w-75">
+                        <h6>Calle*</h6><input required class="form-control mb-4 w-100" placeholder="Calle" th:field="*{streetName}" type="text">
+                    </div>
+                    <div>
+                        <label class="ms-3 h6" for="addressExtNumber">N&uacute;m ext*</label>
+                        <input required id="addressExtNumber" style="width:70px;" class="form-control mb-4 ms-3" placeholder="# ext." th:field="*{extNumber}" type="text">
+                    </div>
+                    <div>
+                        <label class="ms-3" for="addressIntNumber">N&uacute;m int.</label>
+                        <input id="addressIntNumber" style="width:70px;" class="form-control mb-4 ms-3" placeholder="# int." th:field="*{intNumber}" type="text">
+                    </div>
+                </div>
+                <h6>Colonia*</h6><input required class="form-control mb-4 w-50" placeholder="Colonia" th:field="*{colony}" type="text">
+                <h6>Municipio*</h6><input required class="form-control mb-4 w-50" placeholder="Municipio" th:field="*{municipality}" type="text">
+                <h6>Estado*</h6><input required class="form-control mb-4 w-50" placeholder="Estado" th:field="*{state}" type="text">
+            </div>
+            <div class=" ms-5 w-50">
+                <h6>Ciudad*</h6><input required class="form-control mb-4 w-50" placeholder="Ciudad" th:field="*{city}" type="text">
+                <h6>C&oacute;digo Postal*</h6><input required class="form-control mb-4 w-50" placeholder="C&oacute;digo Postal" th:field="*{zipCode}" type="text">
+                <h6>Pa&iacute;s*</h6><input required class="form-control mb-4 w-50" placeholder="Pa&iacute;s" th:field="*{country}" type="text">
+            </div>
+        </div>
+
+        <hr>
+        <h3>Informaci&oacute;n de empleo</h3>
+        <br>
+
+        <div style="display:flex;">
+            <div class="w-50">
+                <h6>Nombre de la empresa*</h6><input required class="form-control mb-4 w-50" placeholder="Nombre de la empresa" th:field="*{companyName}" type="text">
+                <div style="display:flex;">
+                    <div>
+                        N&uacute;mero de tel&eacute;fono<input class="form-control mb-4 w-100" placeholder="Numero de tel&eacute;fono" th:field="*{companyPhoneNumber}" type="text">
+                    </div>
+                    <div>
+                        <label class="ms-3" for="workPhoneNumberExt">Extensi&oacute;n</label>
+                        <input style="width:65px;" id="workPhoneNumberExt" class="form-control mb-4 ms-3" placeholder="Ext." th:field="*{companyPhoneNumberExt}" type="text">
+                    </div>
+                </div>
+                <div style="display:flex;">
+                    <div class="w-75">
+                        <h6>Calle*</h6><input required class="form-control mb-4 w-100" placeholder="Calle" th:field="*{companyStreetName}" type="text">
+                    </div>
+                    <div>
+                        <label class="ms-3" for="workAddressNumberExt">N&uacute;m ext</label>
+                        <input required id="workAddressNumberExt" style="width:65px;" class="form-control mb-4 ms-3" placeholder="# ext." th:field="*{companyExtNumber}" type="text">
+                    </div>
+                    <div>
+                        <label class="ms-3" for="workAddressNumberInt">N&uacute;m int.</label>
+                        <input id="workAddressNumberInt" style="width:65px;" class="form-control mb-4 ms-3" placeholder="# int." th:field="*{companyIntNumber}" type="text">
+                    </div>
+                </div>
+                <h6>Colonia*</h6><input required class="form-control mb-4 w-50" placeholder="Colonia" th:field="*{companyColony}" type="text">
+                <h6>Ciudad*</h6><input required class="form-control mb-4 w-50" placeholder="Ciudad" th:field="*{companyCity}" type="text">
+                <h6>Municipio*</h6><input required class="form-control mb-4 w-50" placeholder="Municipio" th:field="*{companyMunicipality}" type="text">
+                <h6>Estado*</h6><input required class="form-control mb-4 w-50" placeholder="Estado" th:field="*{companyState}" type="text">
+
+            </div>
+
+            <div class="ms-5 w-50">
+                <h6>Pa&iacute;s*</h6><input required class="form-control mb-4 w-50" placeholder="Pa&iacute;s" th:field="*{companyCountry}" type="text">
+                <h6>C&oacute;digo postal*</h6><input required class="form-control mb-4 w-50" placeholder="C&oacute;digo postal" th:field="*{companyZipCode}" type="text">
+                <h6>Fecha de inicio de la relaci&oacute;n laboral*</h6><input required id="startWorkingDate" class="form-control mb-4 w-50" th:field="*{dateStartedWorking}" type="date">
+                <h6>Actividad de la empresa*</h6><input required class="form-control mb-4 w-50" placeholder="Actividad de la empresa" th:field="*{companyActivity}" type="text">
+                <h6>Ocupaci&oacute;n*</h6><select required id="jobStat" class="form-select mb-4 w-50" th:field="*{jobStatus}">
+                    <option value="checkboxPrivEmployee" selected>Empleado</option>
+                    <option value="checkboxPubEmployee">Empleado público</option>
+                    <option value="checkboxFreelancer">Independiente</option>
+                    <option value="checkboxOwner">Negocio propio</option>
+                    <option value="checkboxPartner">Socio</option>
+                    <option value="checkboxRetired">Jubilado</option>
+                    <option value="checkboxPensioner">Pensionado</option>
+                    <option value="contractor">Honorarios</option>
+                    <option value="eventual">Eventual</option>
+                    <option value="checkboxStudent">Estudiante</option>
+                    <option value="checkboxHomemaker">Ama de casa</option>
+                    <option value="checkboxOtherCompany">Otro</option>
+                </select>
+                <h6>Nombre del puesto*</h6><input required class="form-control mb-4 w-50" placeholder="Nombre del puesto" th:field="*{positionName}" type="text">
+            </div>
+        </div>
+
+        <hr>
+        <h3>Informaci&oacute;n de referencias</h3>
+        <br>
+
+        <div style="display:flex;">
+            <div class="w-25">
+                <h5>Información referencia personal</h5>
+                <h6>Primer nombre*</h6><input required class="form-control mb-4 w-100" placeholder="Primer nombre" th:field="*{persRefFirstName}" type="text">
+                Segundo nombre<input class="form-control mb-4 w-100" placeholder="Segundo nombre" th:field="*{persRefMiddleName}" type="text">
+                <h6>Apellido paterno*</h6><input required class="form-control mb-4 w-100" placeholder="Apellido paterno" th:field="*{persRefLastName}" type="text">
+                Apellido materno<input class="form-control mb-4 w-100" placeholder="Apellido materno" th:field="*{persRefSecLastName}" type="text">
+                <h6>N&uacute;mero de tel&eacute;fono*</h6><input required class="form-control mb-4 w-100" placeholder="N&uacute;mero de tel&eacute;fono" th:field="*{persRefPhoneNumber}" type="text">
+            </div>
+
+            <div class="ms-5 w-25">
+                <h5>Información referencia familiar</h5>
+                <h6>Primer nombre*</h6><input required class="form-control mb-4 w-100" placeholder="Primer nombre" th:field="*{famRefFirstName}" type="text">
+                Segundo nombre<input class="form-control mb-4 w-100" placeholder="Segundo nombre" th:field="*{famRefMiddleName}" type="text">
+                <h6>Apellido paterno*</h6><input required class="form-control mb-4 w-100" placeholder="Apellido paterno" th:field="*{famRefLastName}" type="text">
+                Apellido materno<input class="form-control mb-4 w-100" placeholder="Apellido materno" th:field="*{famRefSecLastName}" type="text">
+                <h6>N&uacute;mero de tel&eacute;fono*</h6><input required class="form-control mb-4 w-100" placeholder="N&uacute;mero de tel&eacute;fono" th:field="*{famRefPhoneNumber}" type="text">
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="d-flex">
+            <div class="w-100 d-flex align-self-center">
+                <a th:href="@{/clients/listPaged}">Volver a la Lista de Clientes</a>
+            </div>
+            <div id="buttons" class="d-flex flex-row-reverse w-100 align-self-center">
+                <button type="submit" class="btn btn-info col-3">Guardar</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+</body>
+</html>

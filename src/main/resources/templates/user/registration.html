@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de solicitudes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/clients/listPaged}">Generador de solicitudes</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent">
+            <div class="d-flex">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" th:href="@{/users/list}">Mostrar Usuarios</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="d-flex justify-content-end">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link active text-danger" aria-current="page" th:href="@{/logout}">Cerrar Sesi&oacute;n</a>
+                    </li>
+                </ul>
+                <h6 class="nav-link d-flex align-items-center mb-0 text-white">Usuario: <span class="ms-1" sec:authentication="principal.username"></span></h6>
+            </div>
+        </div>
+    </div>
+</nav>
+<br/><br/><br/>
+<div class="container">
+    <div class="row col-md-8 offset-md-2">
+        <div class="card px-0">
+            <div class="card-header">
+                <h2 class="text-center">Registro de Usuarios</h2>
+            </div>
+            <div th:if="${param.success}"> `
+                <div class="alert alert-info">
+                    Usuario registrado en la base de datos.
+                </div>
+            </div>
+            <div class="card-body">
+                <form
+                        method="post"
+                        role="form"
+                        th:action="@{/users/registration/save}"
+                        th:object="${userDTO}"
+                >
+                    <div class="form-group mb-3">
+                        <label class="form-label">Primer nombre</label>
+                        <input
+                                class="form-control"
+                                id="firstName"
+                                name="firstName"
+                                placeholder="Ingrese primer nombre"
+                                th:field="*{firstName}"
+                                type="text"
+                        />
+                        <p th:errors="*{firstName}" class="text-danger"
+                           th:if="${#fields.hasErrors('firstName')}"></p>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label">Apellido paterno</label>
+                        <input
+                                class="form-control"
+                                id="lastName"
+                                name="lastName"
+                                placeholder="Ingrese apellido paterno"
+                                th:field="*{lastName}"
+                                type="text"
+                        />
+                        <p th:errors="*{lastName}" class="text-danger"
+                           th:if="${#fields.hasErrors('lastName')}"></p>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label">E-mail</label>
+                        <input
+                                class="form-control"
+                                id="email"
+                                name="email"
+                                placeholder="Ingrese e-mail (con este iniciar&aacute; sesi&oacute;n)"
+                                th:field="*{email}"
+                                type="email"
+                        />
+                        <p th:errors="*{email}" class="text-danger"
+                           th:if="${#fields.hasErrors('email')}"></p>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label">Contrase&ntilde;a</label>
+                        <input
+                                class="form-control"
+                                id="password"
+                                name="password"
+                                placeholder="Ingrese una contrase&ntilde;a segura"
+                                th:field="*{password}"
+                                type="password"
+                        />
+                        <p th:errors="*{password}" class="text-danger"
+                           th:if="${#fields.hasErrors('password')}"></p>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label">Rol del usuario</label>
+                        <select class="form-select" name="role" id="role" th:field="*{role}">
+                            <option value="ROLE_USER" selected>Usuario</option>
+                            <option value="ROLE_ADMIN" >Administrador</option>
+                        </select>
+                        <p th:errors="*{role}" class="text-danger"
+                           th:if="${#fields.hasErrors('role')}"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">Registrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
